@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class Gun : MonoBehaviour
 {
     public Camera cam;
+    public AudioSource gunAudio;
     public float range = 100f;
 
     void Update()
@@ -16,6 +17,7 @@ public class Gun : MonoBehaviour
 
     void Shoot()
     {
+        gunAudio.Play();
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 

@@ -2,16 +2,22 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
-    public static int TargetsRemaining;
+    AudioSource audioSource;
 
-    private void Start()
+    void Awake()
     {
-        TargetsRemaining++;
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void Hit()
     {
-        TargetsRemaining--;
-        Destroy(gameObject);
+        GameManager.instance.TargetHit();
+
+        GetComponent<Collider>().enabled = false;
+        GetComponent<MeshRenderer>().enabled = false;
+
+        audioSource.Play();
+
+        Destroy(gameObject, audioSource.clip.length);
     }
 }
