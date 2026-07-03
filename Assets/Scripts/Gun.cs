@@ -27,6 +27,13 @@ public class Gun : MonoBehaviour
             if (target != null)
             {
                 target.Hit();
+                return;
+            }
+
+            StartTarget startTarget = hit.transform.GetComponent<StartTarget>();
+            if (startTarget != null)
+            {
+                startTarget.Hit();
             }
         }
     }

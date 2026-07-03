@@ -11,28 +11,38 @@ public class GameManager : MonoBehaviour
     float time;
     bool running;
 
-    int totalTargets;
     int remainingTargets;
+
+    public bool isLevelScene;
 
     void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         instance = this;
     }
 
     void Start()
     {
         time = 0;
-        running = true;
+        running = isLevelScene;
 
-        Target[] targets = Object.FindObjectsByType<Target>(FindObjectsSortMode.None);
-        totalTargets = targets.Length;
-        remainingTargets = totalTargets;
-
-        UpdateUI();
+        if (isLevelScene)
+        {
+            Target[] targets = Object.FindObjectsByType<Target>(FindObjectsSortMode.None);
+            remainingTargets = targets.Length;
+            UpdateUI();
+        }
     }
 
     void Update()
     {
+        if (!isLevelScene) return;
+
         if (!running) return;
 
         time += Time.deltaTime;
@@ -41,6 +51,8 @@ public class GameManager : MonoBehaviour
 
     public void TargetHit()
     {
+        if (!isLevelScene) return;
+
         remainingTargets--;
         UpdateUI();
 
@@ -57,6 +69,9 @@ public class GameManager : MonoBehaviour
 
     void UpdateUI()
     {
-        targetsText.text = "Targets: " + remainingTargets;
+        if (targetsText != null)
+        {
+            targetsText.text = "Targets: " + remainingTargets;
+        }
     }
 }
