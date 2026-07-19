@@ -6,6 +6,8 @@ public class Gun : MonoBehaviour
     public Camera cam;
     public AudioSource gunAudio;
     public float range = 100f;
+    public ParticleSystem muzzleFlash;
+    public GameObject impactEffectPrefab;
 
     void Update()
     {
@@ -18,23 +20,28 @@ public class Gun : MonoBehaviour
     void Shoot()
     {
         gunAudio.Play();
+
+        if (muzzleFlash != null) muzzleFlash.Play();
+
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, range))
         {
-            Target target = hit.transform.GetComponent<Target>();
-            if (target != null)
+            if (impactEffectPrefab != null)
             {
-                target.Hit();
-                return;
+                GameObject impact = Instantiate(impactEffectPrefab, hit.point, Quaternion.LookRotation(hit.normal));
+                Destroy(impact, 2f);
             }
 
+            Target target = hit.transform.GetComponent<Target>();
+            if (target != null) { target.Hit(); return; }
+
+            LevelGateTarget gate = hit.transform.GetComponent<LevelGateTarget>();
+            if (gate != null) { gate.Hit(); return; }
+
             StartTarget startTarget = hit.transform.GetComponent<StartTarget>();
-            if (startTarget != null)
-            {
-                startTarget.Hit();
-            }
+            if (startTarget != null) { startTarget.Hit(); }
         }
     }
 }

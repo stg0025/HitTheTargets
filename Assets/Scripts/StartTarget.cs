@@ -27,6 +27,6 @@ public class StartTarget : MonoBehaviour
 
     void LoadLevel()
     {
-        SceneManager.LoadScene("Level1");
+        SceneManager.LoadScene("Levels");
     }
 }
